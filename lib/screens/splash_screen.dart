@@ -22,28 +22,38 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final screenHeight = MediaQuery.of(context).size.height;
+    final screenWidth = MediaQuery.of(context).size.width;
+
+    final logoHeight = (screenHeight * 0.35).clamp(90.0, 200.0).toDouble();
+    final logoWidth = screenWidth.clamp(180.0, 400.0).toDouble();
+    final spacing = (screenHeight * 0.05).clamp(20.0, 40.0).toDouble();
+
     return Scaffold(
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Center(
-            child: Image.asset(
-              "assets/icons/app_icon.png",
-              height: 200,
-              width: 400,
-              fit: BoxFit.cover,
-            ),
+      body: Center(
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Image.asset(
+                "assets/icons/app_icon.png",
+                height: logoHeight,
+                width: logoWidth,
+                fit: BoxFit.cover,
+              ),
+              SizedBox(height: spacing),
+              Text(
+                "Welcome to flutter chat app",
+                style: TextStyle(
+                  fontSize: 30,
+                  color: AppColors.buttonText,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
           ),
-          SizedBox(height: 40),
-          Text(
-            "Welcome to social media app",
-            style: TextStyle(
-              fontSize: 30,
-              color: AppColors.buttonText,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-        ],
+        ),
       ),
       backgroundColor: AppColors.primaryColor,
     );

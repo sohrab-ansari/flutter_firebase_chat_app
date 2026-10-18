@@ -20,50 +20,64 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final screenHeight = MediaQuery.of(context).size.height;
+    final screenWidth = MediaQuery.of(context).size.width;
+
     return Scaffold(
       appBar: AppBar(elevation: 0, backgroundColor: AppColors.background),
       backgroundColor: AppColors.background,
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 18.0),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 40),
-          child: Column(
-            // mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              AppText(
-                text: "Forgot password",
-                fontSize: 30,
-                fontWeight: FontWeight.w600,
+      body: SingleChildScrollView(
+        child: Center(
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 480),
+            child: Padding(
+              padding: EdgeInsets.symmetric(
+                horizontal: (screenWidth * 0.05).clamp(14.0, 18.0).toDouble(),
               ),
-              SizedBox(height: 10),
-              AppText(
-                text:
-                    "Please enter your email \n to recover your email account",
-                fontSize: 15,
-                textAlign: TextAlign.center,
+              child: Padding(
+                padding: EdgeInsets.symmetric(
+                  vertical: (screenHeight * 0.05).clamp(24.0, 40.0).toDouble(),
+                ),
+                child: Column(
+                  // mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    AppText(
+                      text: "Forgot password",
+                      fontSize: 30,
+                      fontWeight: FontWeight.w600,
+                    ),
+                    SizedBox(height: 10),
+                    AppText(
+                      text:
+                          "Please enter your email \n to recover your email account",
+                      fontSize: 15,
+                      textAlign: TextAlign.center,
+                    ),
+                    SizedBox(height: 40),
+                    AppTextField(
+                      controller: emailController,
+                      hintText: "Enter your email",
+                    ),
+                    SizedBox(height: 40),
+                    AppButton(
+                      text: "Forgot password",
+                      onPressed: () {
+                        auth
+                            .sendPasswordResetEmail(
+                              email: emailController.text.toString(),
+                            )
+                            .then((value) {
+                              "Forgot password";
+                            })
+                            .onError((error, stackTrace) {
+                              print(error.toString());
+                            });
+                      },
+                    ),
+                  ],
+                ),
               ),
-              SizedBox(height: 40),
-              AppTextField(
-                controller: emailController,
-                hintText: "Enter your email",
-              ),
-              SizedBox(height: 40),
-              AppButton(
-                text: "Forgot password",
-                onPressed: () {
-                  auth
-                      .sendPasswordResetEmail(
-                        email: emailController.text.toString(),
-                      )
-                      .then((value) {
-                        "Forgot password";
-                      })
-                      .onError((error, stackTrace) {
-                        print(error.toString());
-                      });
-                },
-              ),
-            ],
+            ),
           ),
         ),
       ),

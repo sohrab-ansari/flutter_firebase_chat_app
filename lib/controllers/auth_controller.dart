@@ -8,7 +8,12 @@ import 'package:flutter/material.dart';
 
 class AuthController with ChangeNotifier {
   final auth = FirebaseAuth.instance;
-  DatabaseReference ref = FirebaseDatabase.instance.ref().child('users');
+  // DatabaseReference ref = FirebaseDatabase.instance.ref().child('users');
+
+  DatabaseReference ref = FirebaseDatabase.instanceFor(
+  app: FirebaseAuth.instance.app,
+  databaseURL: 'https://flutter-firebase-2298a-default-rtdb.firebaseio.com/',
+).ref().child('users');
 
   bool _isLoading = false;
   bool get Loading => _isLoading;

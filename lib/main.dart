@@ -3,7 +3,7 @@ import 'package:firebase_tutorial/firebase_options.dart';
 import 'package:firebase_tutorial/utils/routes/app_routes.dart';
 import 'package:flutter/material.dart';
 
-Future<void> main() async {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
@@ -20,7 +20,6 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       initialRoute: AppRoutes.splash,
       routes: AppRoutes.routes,
-
-     );
+    );
   }
 }

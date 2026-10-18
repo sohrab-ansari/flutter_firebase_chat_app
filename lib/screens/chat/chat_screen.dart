@@ -1,6 +1,5 @@
 // ignore_for_file: unused_local_variable, unused_field
 
-
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_tutorial/controllers/session_controller.dart';
 import 'package:firebase_tutorial/utils/app_colors.dart';
@@ -35,19 +34,20 @@ class _ChatScreenState extends State<ChatScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+
     return Scaffold(
       backgroundColor: AppColors.background,
 
       appBar: AppBar(
-         iconTheme: const IconThemeData(
-    color: AppColors.white,
-    size:30
-  ),
-  elevation: 0,
+        iconTheme: const IconThemeData(color: AppColors.white, size: 30),
+        elevation: 0,
         centerTitle: true,
         backgroundColor: AppColors.primaryColor,
         title: Text(
           widget.name,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
           style: const TextStyle(
             color: Colors.white,
             fontWeight: FontWeight.bold,
@@ -194,7 +194,7 @@ class _ChatScreenState extends State<ChatScreen> {
                             : Alignment.centerLeft,
                         child: Container(
                           constraints: BoxConstraints(
-                            maxWidth: MediaQuery.of(context).size.width * 0.75,
+                            maxWidth: screenWidth * 0.75,
                           ),
                           margin: const EdgeInsets.symmetric(
                             horizontal: 12,

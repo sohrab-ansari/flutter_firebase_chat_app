@@ -26,16 +26,21 @@ class _MainScreenState extends State<MainScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.white,
-      body: IndexedStack(children: screens, index: selectedIndex),
-      bottomNavigationBar: AppBottomNavigation(
-        selectedIndex: selectedIndex,
-        onTabChange: (index) {
-          setState(() {
-            selectedIndex = index;
-          });
-        },
+    return SafeArea(
+      top: false,
+
+      bottom: true,
+      child: Scaffold(
+        backgroundColor: AppColors.white,
+        body: IndexedStack(children: screens, index: selectedIndex),
+        bottomNavigationBar: AppBottomNavigation(
+          selectedIndex: selectedIndex,
+          onTabChange: (index) {
+            setState(() {
+              selectedIndex = index;
+            });
+          },
+        ),
       ),
     );
   }

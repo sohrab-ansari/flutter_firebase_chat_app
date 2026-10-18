@@ -30,9 +30,11 @@ class _LoginScreenState extends State<LoginScreen> {
     super.dispose();
   }
 
- 
   @override
   Widget build(BuildContext context) {
+    final screenHeight = MediaQuery.of(context).size.height;
+    final screenWidth = MediaQuery.of(context).size.width;
+
     return Scaffold(
       backgroundColor: AppColors.background,
       body: SafeArea(
@@ -43,165 +45,179 @@ class _LoginScreenState extends State<LoginScreen> {
             return Center(
               child: SingleChildScrollView(
                 padding: EdgeInsets.symmetric(
-                  horizontal: isWide ? 32 : 24,
-                  vertical: 24,
+                  horizontal: isWide
+                      ? (screenWidth * 0.04).clamp(24.0, 32.0).toDouble()
+                      : 24,
+                  vertical: (screenHeight * 0.03).clamp(16.0, 24.0).toDouble(),
                 ),
-                child: Card(
-                  elevation: 2,
-                  color: AppColors.white,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(24),
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(
+                    maxWidth: isWide ? 480 : double.infinity,
                   ),
-                  child: Padding(
-                    padding: EdgeInsets.all(isWide ? 36 : 24),
-                    child: Form(
-                      key: _formKey,
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: [
-                          Icon(
-                            Icons.lock_person_rounded,
-                            size: 70,
-                            color: AppColors.iconPrimary,
-                          ),
-                          SizedBox(height: 20),
-
-                          Text(
-                            'Welcome Back!',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              fontSize: 28,
-                              fontWeight: FontWeight.bold,
-                              color: Color(0xFF22223A),
+                  child: Card(
+                    elevation: 2,
+                    color: AppColors.white,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(24),
+                    ),
+                    child: Padding(
+                      padding: EdgeInsets.all(isWide ? 36 : 24),
+                      child: Form(
+                        key: _formKey,
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            Icon(
+                              Icons.lock_person_rounded,
+                              size: 70,
+                              color: AppColors.iconPrimary,
                             ),
-                          ),
-                          SizedBox(height: 8),
+                            SizedBox(height: 20),
 
-                          Text(
-                            'Login to continue',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(fontSize: 15, color: Colors.grey),
-                          ),
-                          SizedBox(height: 32),
-
-                          TextFormField(
-                            controller: _emailController,
-                            keyboardType: TextInputType.emailAddress,
-                            textInputAction: TextInputAction.next,
-                            autofillHints: [AutofillHints.email],
-                            decoration: InputDecoration(
-                              hintText: 'Enter your email',
-                              prefixIcon: Icon(Icons.email_outlined),
-                              filled: true,
-                              fillColor: Color(0xFFF7F7FB),
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(14),
-                                borderSide: BorderSide.none,
+                            Text(
+                              'Welcome Back!',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                fontSize: 28,
+                                fontWeight: FontWeight.bold,
+                                color: Color(0xFF22223A),
                               ),
                             ),
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return 'Please enter your email';
-                              }
+                            SizedBox(height: 8),
 
-                              return null;
-                            },
-                          ),
-                          SizedBox(height: 10),
-
-                          TextFormField(
-                            controller: _passwordController,
-                            // keyboardType: TextInputType.number,
-                            obscureText: true,
-                            textInputAction: TextInputAction.done,
-                            autofillHints: [AutofillHints.password],
-                            decoration: InputDecoration(
-                              hintText: 'Enter your password',
-
-                              prefixIcon: Icon(Icons.lock_outline),
-                              filled: true,
-                              fillColor: Color(0xFFF7F7FB),
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(14),
-                                borderSide: BorderSide.none,
+                            Text(
+                              'Login to continue',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                fontSize: 15,
+                                color: Colors.grey,
                               ),
                             ),
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return 'Please enter your password';
-                              }
+                            SizedBox(height: 32),
 
-                              if (value.length < 6) {
-                                return 'Password must be at least 6 characters';
-                              }
-
-                              return null;
-                            },
-                          ),
-
-                          SizedBox(height: 30),
-
-                          ChangeNotifierProvider(
-                            create: (context) => AuthController(),
-                            child: Consumer<AuthController>(
-                              builder: (context, provider, child) {
-                                return AppButton(
-                                  text: 'Login',
-                                  isLoading: isLoading,
-                                  onPressed: () {
-                                    if (_formKey.currentState!.validate()) {
-                                      
-                                      provider.login(
-                                        context,
-                                        _emailController.text,
-                                        _passwordController.text,
-                                      );
-                                    }
-                                  },
-                                );
-                              },
-                            ),
-                          ),
-                          Align(
-                            alignment: AlignmentGeometry.bottomRight,
-                            child: TextButton(
-                              onPressed: () {
-                                Navigator.pushNamed(
-                                  context,
-                                  AppRoutes.forgotPassword,
-                                );
-                              },
-                              child: Text('Forgot password',style: TextStyle(decoration: TextDecoration.underline),),
-                            ),
-                          ),
-
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Flexible(
-                                child: Text(
-                                  "Don't have an account? ",
-                                  style: TextStyle(color: Colors.grey),
+                            TextFormField(
+                              controller: _emailController,
+                              keyboardType: TextInputType.emailAddress,
+                              textInputAction: TextInputAction.next,
+                              autofillHints: [AutofillHints.email],
+                              decoration: InputDecoration(
+                                hintText: 'Enter your email',
+                                prefixIcon: Icon(Icons.email_outlined),
+                                filled: true,
+                                fillColor: Color(0xFFF7F7FB),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(14),
+                                  borderSide: BorderSide.none,
                                 ),
                               ),
-                              TextButton(
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return 'Please enter your email';
+                                }
+
+                                return null;
+                              },
+                            ),
+                            SizedBox(height: 10),
+
+                            TextFormField(
+                              controller: _passwordController,
+                              // keyboardType: TextInputType.number,
+                              obscureText: true,
+                              textInputAction: TextInputAction.done,
+                              autofillHints: [AutofillHints.password],
+                              decoration: InputDecoration(
+                                hintText: 'Enter your password',
+
+                                prefixIcon: Icon(Icons.lock_outline),
+                                filled: true,
+                                fillColor: Color(0xFFF7F7FB),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(14),
+                                  borderSide: BorderSide.none,
+                                ),
+                              ),
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return 'Please enter your password';
+                                }
+
+                                if (value.length < 6) {
+                                  return 'Password must be at least 6 characters';
+                                }
+
+                                return null;
+                              },
+                            ),
+
+                            SizedBox(height: 30),
+
+                            ChangeNotifierProvider(
+                              create: (context) => AuthController(),
+                              child: Consumer<AuthController>(
+                                builder: (context, provider, child) {
+                                  return AppButton(
+                                    text: 'Login',
+                                    isLoading: isLoading,
+                                    onPressed: () {
+                                      if (_formKey.currentState!.validate()) {
+                                        provider.login(
+                                          context,
+                                          _emailController.text,
+                                          _passwordController.text,
+                                        );
+                                      }
+                                    },
+                                  );
+                                },
+                              ),
+                            ),
+                            Align(
+                              alignment: AlignmentGeometry.bottomRight,
+                              child: TextButton(
                                 onPressed: () {
                                   Navigator.pushNamed(
                                     context,
-                                    AppRoutes.signup,
+                                    AppRoutes.forgotPassword,
                                   );
                                 },
                                 child: Text(
-                                  'Sign Up',
+                                  'Forgot password',
                                   style: TextStyle(
                                     decoration: TextDecoration.underline,
                                   ),
                                 ),
                               ),
-                            ],
-                          ),
-                        ],
+                            ),
+
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Flexible(
+                                  child: Text(
+                                    "Don't have an account? ",
+                                    style: TextStyle(color: Colors.grey),
+                                  ),
+                                ),
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.pushNamed(
+                                      context,
+                                      AppRoutes.signup,
+                                    );
+                                  },
+                                  child: Text(
+                                    'Sign Up',
+                                    style: TextStyle(
+                                      decoration: TextDecoration.underline,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),

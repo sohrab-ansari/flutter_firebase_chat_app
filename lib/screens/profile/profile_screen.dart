@@ -26,6 +26,9 @@ final _auth = FirebaseAuth.instance;
 class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
+    final screenHeight = MediaQuery.of(context).size.height;
+    final screenWidth = MediaQuery.of(context).size.width;
+
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: ChangeNotifierProvider(
@@ -52,142 +55,164 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
                   return SafeArea(
                     child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                        vertical: 35,
-                        horizontal: 15,
+                      padding: EdgeInsets.symmetric(
+                        vertical: (screenHeight * 0.044)
+                            .clamp(20.0, 35.0)
+                            .toDouble(),
+                        horizontal: (screenWidth * 0.042)
+                            .clamp(12.0, 15.0)
+                            .toDouble(),
                       ),
                       child: SingleChildScrollView(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Stack(
-                              alignment: Alignment.bottomCenter,
+                        child: Center(
+                          child: ConstrainedBox(
+                            constraints: const BoxConstraints(maxWidth: 600),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.start,
                               children: [
-                                Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                    vertical: 15,
-                                  ),
-                                  child: Center(
-                                    child: Container(
-                                      height: 150,
-                                      width: 150,
-                                      decoration: BoxDecoration(
-                                        shape: BoxShape.circle,
-                                        border: Border.all(
-                                          color: AppColors.darkGray,
-                                          width: 3,
+                                Stack(
+                                  alignment: Alignment.bottomCenter,
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                        vertical: 15,
+                                      ),
+                                      child: Center(
+                                        child: Container(
+                                          height: 150,
+                                          width: 150,
+                                          decoration: BoxDecoration(
+                                            shape: BoxShape.circle,
+                                            border: Border.all(
+                                              color: AppColors.darkGray,
+                                              width: 3,
+                                            ),
+                                          ),
+                                          child: ClipRRect(
+                                            borderRadius: BorderRadius.circular(
+                                              70,
+                                            ),
+                                            child: provider.image == null
+                                                ? map['profileImage']
+                                                              .toString() ==
+                                                          ""
+                                                      ? Icon(
+                                                          Icons
+                                                              .person_2_outlined,
+                                                          size: 50,
+                                                        )
+                                                      : Image(
+                                                          fit: BoxFit.fill,
+                                                          image: NetworkImage(
+                                                            map['profileImage']
+                                                                .toString(),
+                                                          ),
+                                                          loadingBuilder:
+                                                              (
+                                                                context,
+                                                                child,
+                                                                loadingProgress,
+                                                              ) {
+                                                                if (loadingProgress ==
+                                                                    null)
+                                                                  return child;
+                                                                return Center(
+                                                                  child: CircularProgressIndicator(
+                                                                    color: AppColors
+                                                                        .primaryColor,
+                                                                  ),
+                                                                );
+                                                              },
+                                                          errorBuilder:
+                                                              (
+                                                                context,
+                                                                error,
+                                                                stackTrace,
+                                                              ) {
+                                                                return Center(
+                                                                  child: CircularProgressIndicator(
+                                                                    color: AppColors
+                                                                        .primaryColor,
+                                                                  ),
+                                                                );
+                                                              },
+                                                        )
+                                                : Image.file(
+                                                    File(
+                                                      provider.image!.path,
+                                                    ).absolute,
+                                                    fit: BoxFit.cover,
+                                                  ),
+                                          ),
                                         ),
                                       ),
-                                      child: ClipRRect(
-                                        borderRadius: BorderRadius.circular(70),
-                                        child: provider.image == null
-                                            ? map['profileImage'].toString() == ""
-                                                  ? Icon(
-                                                      Icons.person_2_outlined,
-                                                      size: 50,
-                                                    )
-                                                  : Image(
-                                                      fit: BoxFit.fill,
-                                                      image: NetworkImage(
-                                                        map['profileImage']
-                                                            .toString(),
-                                                      ),
-                                                      loadingBuilder:
-                                                          (
-                                                            context,
-                                                            child,
-                                                            loadingProgress,
-                                                          ) {
-                                                            if (loadingProgress ==
-                                                                null)
-                                                              return child;
-                                                            return Center(
-                                                              child: CircularProgressIndicator(
-                                                                color: AppColors
-                                                                    .primaryColor,
-                                                              ),
-                                                            );
-                                                          },
-                                                      errorBuilder:
-                                                          (
-                                                            context,
-                                                            error,
-                                                            stackTrace,
-                                                          ) {
-                                                            return Center(
-                                                              child: CircularProgressIndicator(
-                                                                color: AppColors
-                                                                    .primaryColor,
-                                                              ),
-                                                            );
-                                                          },
-                                                    )
-                                            : Image.file(
-                                                File(
-                                                  provider.image!.path,
-                                                ).absolute,
-                                                fit: BoxFit.cover,
-                                              ),
+                                    ),
+                                    InkWell(
+                                      onTap: () {
+                                        provider.pickImage(context);
+                                      },
+                                      child: CircleAvatar(
+                                        backgroundColor: AppColors.primaryColor,
+                                        child: Icon(
+                                          Icons.add,
+                                          color: AppColors.white,
+                                        ),
                                       ),
                                     ),
+                                  ],
+                                ),
+                                SizedBox(height: 30),
+                                InkWell(
+                                  onTap: () {
+                                    provider.showNameDialog(
+                                      context,
+                                      map['userName'],
+                                    );
+                                  },
+                                  child: ReUseableRow(
+                                    iconData: Icons.person_2_outlined,
+                                    title: "UserName",
+                                    value: map['userName'],
                                   ),
                                 ),
                                 InkWell(
                                   onTap: () {
-                                    provider.pickImage(context);
+                                    provider.showNumberDialog(
+                                      context,
+                                      map['phone'].toString(),
+                                    );
                                   },
-                                  child: CircleAvatar(
-                                    backgroundColor: AppColors.primaryColor,
-                                    child: Icon(
-                                      Icons.add,
-                                      color: AppColors.white,
-                                    ),
+
+                                  child: ReUseableRow(
+                                    iconData: Icons.phone_outlined,
+                                    title: "Phone",
+                                    value: map['phone'] == null
+                                        ? "xxx-xxx-xxx"
+                                        : map['phone'].toString(),
                                   ),
+                                ),
+                                ReUseableRow(
+                                  iconData: Icons.email_outlined,
+                                  title: "Email",
+                                  value: map['email'],
+                                ),
+                                SizedBox(height: 40),
+                                AppButton(
+                                  text: "Logout",
+                                  onPressed: () {
+                                    _auth.signOut();
+                                    print("Logout Successfully");
+
+                                    Navigator.pushNamed(
+                                      context,
+                                      AppRoutes.login,
+                                    );
+                                  },
                                 ),
                               ],
                             ),
-                            SizedBox(height: 30),
-                            InkWell(
-                              onTap: () {
-                                provider.showNameDialog(context, map['userName']);
-                              },
-                              child: ReUseableRow(
-                                iconData: Icons.person_2_outlined,
-                                title: "UserName",
-                                value: map['userName'],
-                              ),
-                            ),
-                            InkWell(
-                              onTap: () {
-                                provider.showNumberDialog(context,  map['phone'].toString());
-                              },
-                        
-                              child: ReUseableRow(
-                                iconData: Icons.phone_outlined,
-                                title: "Phone",
-                                value:
-                                    map['phone'] == null 
-                                    ? "xxx-xxx-xxx"
-                                    : map['phone'].toString(),
-                              ),
-                            ),
-                            ReUseableRow(
-                              iconData: Icons.email_outlined,
-                              title: "Email",
-                              value: map['email'],
-                            ),
-                            SizedBox(height: 40),
-                            AppButton(
-                              text: "Logout",
-                              onPressed: () {
-                                _auth.signOut();
-                                print("Logout Successfully");
-                        
-                                Navigator.pushNamed(context, AppRoutes.login);
-                              },
-                            ),
-                          ],
+                          ),
                         ),
                       ),
                     ),
@@ -219,12 +244,24 @@ class ReUseableRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+
     return Column(
       children: [
         ListTile(
           leading: Icon(iconData),
           title: Text(title),
-          trailing: Text(value, style: TextStyle(fontSize: 14)),
+          trailing: ConstrainedBox(
+            constraints: BoxConstraints(
+              maxWidth: (screenWidth * 0.45).clamp(80.0, 220.0).toDouble(),
+            ),
+            child: Text(
+              value,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(fontSize: 14),
+            ),
+          ),
         ),
         Divider(color: AppColors.divider),
       ],

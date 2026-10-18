@@ -45,6 +45,13 @@ class _HomeScreenState extends State<HomeScreen>
 
   @override
   Widget build(BuildContext context) {
+    final screenHeight = MediaQuery.of(context).size.height;
+    final screenWidth = MediaQuery.of(context).size.width;
+
+    final contentPadding = (screenWidth * 0.067).clamp(16.0, 24.0).toDouble();
+    final iconPadding = (screenWidth * 0.083).clamp(20.0, 30.0).toDouble();
+    final iconSize = (screenWidth * 0.28).clamp(80.0, 100.0).toDouble();
+
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(
@@ -73,20 +80,20 @@ class _HomeScreenState extends State<HomeScreen>
           opacity: _fadeAnimation,
           child: SlideTransition(
             position: _slideAnimation,
-            child: Padding(
-              padding: const EdgeInsets.all(24),
+            child: SingleChildScrollView(
+              padding: EdgeInsets.all(contentPadding),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Container(
-                    padding: const EdgeInsets.all(30),
+                    padding: EdgeInsets.all(iconPadding),
                     decoration: BoxDecoration(
                       color: AppColors.primaryColor.withOpacity(0.10),
                       shape: BoxShape.circle,
                     ),
                     child: SizedBox(
-                      height: 100,
-                      width: 100,
+                      height: iconSize,
+                      width: iconSize,
                       child: Image.asset(
                         'assets/icons/app_icon.png',
                         fit: BoxFit.cover,
@@ -113,7 +120,7 @@ class _HomeScreenState extends State<HomeScreen>
                   const SizedBox(height: 28),
                   SizedBox(
                     width: double.infinity,
-                    height: 52,
+                    height: (screenHeight * 0.065).clamp(46.0, 52.0).toDouble(),
                     child: ElevatedButton.icon(
                       onPressed: () {
                         Navigator.push(
